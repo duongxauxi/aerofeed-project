@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroFeed — Clean RSS Reader</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="glass-bg-blur"></div>
+    <div class="glass-bg-blur-2"></div>
+    
+    <div class="app-container">
+        <!-- Sidebar / Navigation -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i data-lucide="rss"></i>
+                </div>
+                <div>
+                    <h1>AeroFeed</h1>
+                    <p class="tagline">Dynamic RSS Reader</p>
+                </div>
+            </div>
+            
+            <div class="presets-section">
+                <h3>PRESET FEEDS</h3>
+                <div class="preset-buttons">
+                    {% for key, url in default_feeds.items() %}
+                    <button class="preset-btn" data-url="{{ url }}" data-name="{{ key }}">
+                        <i data-lucide="hash"></i>
+                        <span>{{ key.replace('_', ' ').title() }}</span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="custom-feed-section">
+                <h3>LOAD CUSTOM FEED</h3>
+                <form id="custom-feed-form" class="custom-feed-form">
+                    <div class="input-wrapper">
+                        <i data-lucide="link" class="input-icon"></i>
+                        <input type="url" id="custom-url-input" placeholder="https://example.com/rss.xml" required>
+                    </div>
+                    <button type="submit" class="primary-btn">
+                        <span>Load Feed</span>
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="footer-meta">
+                <p>Designed with premium aesthetics</p>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Dashboard Bar -->
+            <div class="dashboard-bar">
+                <div class="feed-info">
+                    <h2 id="current-feed-title">TechCrunch</h2>
+                    <p id="current-feed-desc">Technology news and analysis</p>
+                </div>
+                
+                <div class="controls-bar">
+                    <!-- Search Input -->
+                    <div class="search-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search articles...">
+                    </div>
+                    
+                    <!-- Refresh Button -->
+                    <button id="refresh-btn" class="refresh-btn" title="Refresh articles">
+                        <i data-lucide="refresh-cw" id="refresh-icon"></i>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="error-banner" class="error-banner hidden">
+                <i data-lucide="alert-circle"></i>
+                <span id="error-message">Failed to load articles. Please check the RSS link.</span>
+                <button id="close-error-btn"><i data-lucide="x"></i></button>
+            </div>
+
+            <!-- Feed Content -->
+            <section class="articles-section">
+                <!-- Skeleton Loader (displayed during API calls) -->
+                <div id="skeleton-container" class="articles-grid hidden">
+                    {% for i in range(6) %}
+                    <div class="skeleton-card">
+                        <div class="skeleton-image shimmer"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line title shimmer"></div>
+                            <div class="skeleton-line title half shimmer"></div>
+                            <div class="skeleton-line text shimmer"></div>
+                            <div class="skeleton-line text shimmer"></div>
+                            <div class="skeleton-meta">
+                                <div class="skeleton-line meta shimmer"></div>
+                                <div class="skeleton-line button shimmer"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Live Articles Grid -->
+                <div id="articles-container" class="articles-grid">
+                    <!-- Javascript will inject cards here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state hidden">
+                    <div class="empty-icon">
+                        <i data-lucide="folder-open"></i>
+                    </div>
+                    <h3>No articles match your search</h3>
+                    <p>Try searching for other keywords or clear the search input.</p>
+                    <button id="clear-search-btn" class="secondary-btn">Clear Search</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
